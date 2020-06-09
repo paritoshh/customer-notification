@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+/**
+ * Calling CMD to get customer details.
+ */
 @Service
 public class CustomerDetailsServiceImpl implements CustomerDetailsService {
 
     @Autowired
     CustomerDetailsProxy customerDetailsProxy;
+
 
     @Override
     public CustomerDetails getCustomerDetails(String customerId) {

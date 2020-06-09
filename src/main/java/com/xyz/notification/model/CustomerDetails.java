@@ -17,5 +17,5 @@ public class CustomerDetails {
     private String customerName;
     private String customerEmail;
     private String mobileNumber;
-    private  String notificationPreference;
+    private String notificationPreference;
 }

@@ -9,6 +9,9 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+/**
+ * Setting up Email SMTP server.
+ */
 @Configuration
 @ComponentScan(basePackages = {"com.xyz.notification.mail"})
 public class NotificationEmailConfiguration {
@@ -35,6 +38,11 @@ public class NotificationEmailConfiguration {
     private String mailDebug;
 
 
+    /**
+     * Java email bean.
+     *
+     * @return JavaMailSender bean.
+     */
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();

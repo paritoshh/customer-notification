@@ -1,7 +1,7 @@
 package com.xyz.notification.model;
 
-        import lombok.Data;
-        import org.springframework.stereotype.Component;
+import lombok.Data;
+import org.springframework.stereotype.Component;
 
 @Component
 @Data

@@ -14,6 +14,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import static com.xyz.notification.util.NotificationConstants.PREFERENCE_MAIL;
+
 @Slf4j
 @Service("EmailService")
 public class NotificationEmailServiceImpl implements NotificationEmailService {
@@ -37,8 +39,11 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
     @Autowired
     NotificationSmsService notificationSmsService;
 
-    private static final String PREFERENCE_MAIL = "MAIL";
-
+    /**
+     * Sending Email notification to the customer.
+     * @param notificationRequest notification details.
+     * @param customerDetails customer details.
+     */
     @Override
     public void sendEmailWithTemplate(NotificationRequest notificationRequest, CustomerDetails customerDetails) {
 
@@ -52,6 +57,7 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
             emailSender.send(message);
             notificationRepository.save(notificationRequestMapper.getNotificationEntity(notificationRequest));
         } catch (MailException exception) {
+            //Fallback mechanism : sending sms in case of exception in sending email notification, with a deadlock check.
             if (customerDetails.getNotificationPreference().equals(PREFERENCE_MAIL)) {
                 log.info("Failed in sending mail notification to customer, now trying sending SMS." + customerDetails.getCustomerName() + exception.getMessage());
                 notificationSmsService.sendSMSNotification(notificationRequest, customerDetails);
@@ -61,6 +67,13 @@ public class NotificationEmailServiceImpl implements NotificationEmailService {
         }
     }
 
+    /**
+     * Formatting the mail text body.
+     * @param customerName customer name from CMD service.
+     * @param notificationMessage notification message from Kafka
+     * @param orderId Order id from Kafka
+     * @return mail text body.
+     */
     private String getMailText(String customerName, String notificationMessage, String orderId) {
         return String.format(emailContent, customerName, notificationMessage, orderId);
     }
